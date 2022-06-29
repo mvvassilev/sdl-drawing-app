@@ -2,6 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-    AppWindow::start();
+    AppWindow app;
+    app.start();
     return 0;
 }

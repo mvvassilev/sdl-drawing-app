@@ -13,113 +13,89 @@ int AppWindow::resizeCallback(void *data, SDL_Event *event)
     return 0;
 }
 
-int AppWindow::createWindow(SDL_Window *sdl_window, unsigned int window_flags, int win_width, int win_height)
-{
-    sdl_window = SDL_CreateWindow(
-        "Drawing App",           // window title
-        SDL_WINDOWPOS_UNDEFINED, // initial x position
-        SDL_WINDOWPOS_UNDEFINED, // initial y position
-        win_width,               // width, in pixels
-        win_height,              // height, in pixels
-        window_flags             // flags - see below
-    );
-
-    // Check that the window was successfully created
-    if (sdl_window == nullptr)
-    {
-        printf("Could not create window: %s", SDL_GetError());
-        return -1;
-    }
-    return 0;
-}
-
 int AppWindow::start()
 {
-    SDL_Window *sdl_window = nullptr;
+    SDL_Window *m_pSdlWindow = nullptr;
+    int m_width = 1280;
+    int m_height = 720;
+    unsigned int m_flags = SDL_WINDOW_OPENGL;
 
-    unsigned int window_flags = SDL_WINDOW_OPENGL;
-
-    if (SDL_Init(SDL_INIT_VIDEO))
-    {
-        printf("Failed to init SDL Video, error: %s", SDL_GetError());
-        return -1;
-    }
-
-    int win_width = 640;
-    int win_height = 480;
     enum class SCREENSIZE
     {
         is640x480,
         is1366x768,
         fullscreen
-    } curr_screen_size = SCREENSIZE::is640x480,
-      last_non_fullscreen_size = SCREENSIZE::is640x480;
+    } m_currScreenSize = SCREENSIZE::is640x480,
+      m_lastNonFullScreenSize = SCREENSIZE::is640x480;
 
-    int status = AppWindow::createWindow(sdl_window, window_flags, win_width, win_height);
-    if (status)
-        return -1;
+    m_pSdlWindow = SDL_CreateWindow(
+        "Drawing App",           // window title
+        SDL_WINDOWPOS_UNDEFINED, // initial x position
+        SDL_WINDOWPOS_UNDEFINED, // initial y position
+        m_width,                 // width, in pixels
+        m_height,                // height, in pixels
+        m_flags                  // flags - see below
+    );
 
-    SDL_AddEventWatch(resizeCallback, sdl_window);
+    SDL_AddEventWatch(resizeCallback, m_pSdlWindow);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-    SDL_GLContext Context = SDL_GL_CreateContext(sdl_window);
+    SDL_GLContext Context = SDL_GL_CreateContext(m_pSdlWindow);
 
-    glClearColor(1.f, 0.f, 1.f, 0.f); // pink background
-    glViewport(0, 0, win_width, win_height);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f); // white background
+    glViewport(0, 0, m_width, m_height);
 
     bool isRunning = true;
-    SDL_Event sdl_event;
     while (isRunning)
     {
         // 1. check events
-        while (SDL_PollEvent(&sdl_event) != 0)
+        while (SDL_PollEvent(&m_sdlEvent) != 0)
         {
-            if (sdl_event.type == SDL_QUIT)
+            if (m_sdlEvent.type == SDL_QUIT)
             {
                 isRunning = false;
             }
-            else if (sdl_event.type == SDL_KEYDOWN)
+            else if (m_sdlEvent.type == SDL_KEYDOWN)
             {
-                switch (sdl_event.key.keysym.sym)
+                switch (m_sdlEvent.key.keysym.sym)
                 {
                 case SDLK_ESCAPE:
                     isRunning = false;
                     break;
                 case SDLK_F11:
-                    if (curr_screen_size != SCREENSIZE::fullscreen) // then set it to fullscreen and save prev state
+                    if (m_currScreenSize != SCREENSIZE::fullscreen) // then set it to fullscreen and save prev state
                     {
-                        last_non_fullscreen_size = curr_screen_size;
-                        curr_screen_size = SCREENSIZE::fullscreen;
-                        SDL_SetWindowFullscreen(sdl_window, window_flags | SDL_WINDOW_FULLSCREEN_DESKTOP);
+                        m_lastNonFullScreenSize = m_currScreenSize;
+                        m_currScreenSize = SCREENSIZE::fullscreen;
+                        SDL_SetWindowFullscreen(m_pSdlWindow, m_flags | SDL_WINDOW_FULLSCREEN_DESKTOP);
                     }
                     else // is currently fullscreen, set it back to the prev state
                     {
-                        curr_screen_size = last_non_fullscreen_size;
-                        SDL_SetWindowFullscreen(sdl_window, window_flags);
+                        m_currScreenSize = m_lastNonFullScreenSize;
+                        SDL_SetWindowFullscreen(m_pSdlWindow, m_flags);
                     }
-                    SDL_GetWindowSize(sdl_window, &win_width, &win_height);
-                    glViewport(0, 0, win_width, win_height);
+                    SDL_GetWindowSize(m_pSdlWindow, &m_width, &m_height);
+                    glViewport(0, 0, m_width, m_height);
                     break;
                 case SDLK_F10: // toggle screensizes, does nothing if fullscreen
-                    switch (curr_screen_size)
+                    switch (m_currScreenSize)
                     {
                     case SCREENSIZE::fullscreen:
                         break;
                     case SCREENSIZE::is640x480:
-                        curr_screen_size = SCREENSIZE::is1366x768;
-                        SDL_SetWindowSize(sdl_window, 1366, 768);
-                        SDL_GetWindowSize(sdl_window, &win_width, &win_height);
-                        glViewport(0, 0, win_width, win_height);
+                        m_currScreenSize = SCREENSIZE::is1366x768;
+                        SDL_SetWindowSize(m_pSdlWindow, 1366, 768);
+                        SDL_GetWindowSize(m_pSdlWindow, &m_width, &m_height);
+                        glViewport(0, 0, m_width, m_height);
                         break;
                     case SCREENSIZE::is1366x768:
-                        curr_screen_size = SCREENSIZE::is640x480;
-                        SDL_SetWindowSize(sdl_window, 640, 480);
-                        SDL_GetWindowSize(sdl_window, &win_width, &win_height);
-                        glViewport(0, 0, win_width, win_height);
+                        m_currScreenSize = SCREENSIZE::is640x480;
+                        SDL_SetWindowSize(m_pSdlWindow, 640, 480);
+                        SDL_GetWindowSize(m_pSdlWindow, &m_width, &m_height);
+                        glViewport(0, 0, m_width, m_height);
                         break;
                     }
-
                     break;
                 }
             }
@@ -133,12 +109,12 @@ int AppWindow::start()
             // your updated stuff to render here (future todo)
 
             // swap to new updated screen to render
-            SDL_GL_SwapWindow(sdl_window);
+            SDL_GL_SwapWindow(m_pSdlWindow);
         }
     }
 
     // clean up
-    SDL_DestroyWindow(sdl_window);
+    SDL_DestroyWindow(m_pSdlWindow);
     SDL_Quit();
 
     return 0;

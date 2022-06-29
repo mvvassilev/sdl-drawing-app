@@ -7,24 +7,25 @@
 
 class AppWindow
 {
-public:
-    SDL_Window *sdl_window;
-    unsigned int window_flags;
-    bool isRunning;
-    SDL_Event sdl_event;
-    int win_width = 640;
-    int win_height = 480;
+private:
+    SDL_Window *m_pSdlWindow;
+    SDL_Event m_sdlEvent;
+    unsigned int m_flags;
+    bool m_isRunning;
+    int m_width;
+    int m_height;
 
     enum class SCREENSIZE
     {
         is640x480,
         is1366x768,
         fullscreen
-    } curr_screen_size,
-        last_non_fullscreen_size;
+    } m_currScreenSize,
+        m_lastNonFullScreenSize;
 
-    static int start();
+public:
+    int start();
     static int resizeCallback(void *data, SDL_Event *event);
-    static int createWindow(SDL_Window *, unsigned int, int, int);
+    
 };
 #endif // APP_WINDOW_H
