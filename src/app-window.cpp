@@ -76,7 +76,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
     }
 }
 
-int AppWindow::start()
+SDL_Window* AppWindow::create()
 {
     SDL_Window *m_pSdlWindow = nullptr;
     int m_width = 1280;
@@ -106,7 +106,12 @@ int AppWindow::start()
 
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f); // white background
     glViewport(0, 0, m_width, m_height);
+    return m_pSdlWindow;
+}
 
+int AppWindow::start()
+{
+    SDL_Window *m_pSdlWindow = create();
     listen(m_pSdlWindow);
     clean(m_pSdlWindow);
     return 0;

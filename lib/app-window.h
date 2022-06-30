@@ -25,7 +25,8 @@ private:
 
 public:
     int start();
-    void clean(SDL_Window *);
+    SDL_Window *create();
     void listen(SDL_Window *);
+    void clean(SDL_Window *);
 };
 #endif // APP_WINDOW_H
