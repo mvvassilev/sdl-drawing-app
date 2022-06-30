@@ -25,7 +25,5 @@ private:
 
 public:
     int start();
-    static int resizeCallback(void *data, SDL_Event *event);
-    
 };
 #endif // APP_WINDOW_H

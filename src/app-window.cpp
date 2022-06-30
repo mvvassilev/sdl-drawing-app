@@ -1,18 +1,5 @@
 #include "../lib/app-window.h"
 
-int AppWindow::resizeCallback(void *data, SDL_Event *event)
-{
-    if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_RESIZED)
-    {
-        SDL_Window *win = SDL_GetWindowFromID(event->window.windowID);
-        if (win == (SDL_Window *)data)
-        {
-            printf("resizing.....\n");
-        }
-    }
-    return 0;
-}
-
 int AppWindow::start()
 {
     SDL_Window *m_pSdlWindow = nullptr;
@@ -36,8 +23,6 @@ int AppWindow::start()
         m_height,                // height, in pixels
         m_flags                  // flags - see below
     );
-
-    SDL_AddEventWatch(resizeCallback, m_pSdlWindow);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
