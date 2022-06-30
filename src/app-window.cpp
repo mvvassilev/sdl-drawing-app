@@ -1,36 +1,13 @@
 #include "../lib/app-window.h"
 
-int AppWindow::start()
+void AppWindow::clean(SDL_Window *m_pSdlWindow)
 {
-    SDL_Window *m_pSdlWindow = nullptr;
-    int m_width = 1280;
-    int m_height = 720;
-    unsigned int m_flags = SDL_WINDOW_OPENGL;
+    SDL_DestroyWindow(m_pSdlWindow);
+    SDL_Quit();
+}
 
-    enum class SCREENSIZE
-    {
-        is640x480,
-        is1366x768,
-        fullscreen
-    } m_currScreenSize = SCREENSIZE::is640x480,
-      m_lastNonFullScreenSize = SCREENSIZE::is640x480;
-
-    m_pSdlWindow = SDL_CreateWindow(
-        "Drawing App",           // window title
-        SDL_WINDOWPOS_UNDEFINED, // initial x position
-        SDL_WINDOWPOS_UNDEFINED, // initial y position
-        m_width,                 // width, in pixels
-        m_height,                // height, in pixels
-        m_flags                  // flags - see below
-    );
-
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-    SDL_GLContext Context = SDL_GL_CreateContext(m_pSdlWindow);
-
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f); // white background
-    glViewport(0, 0, m_width, m_height);
-
+void AppWindow::listen(SDL_Window *m_pSdlWindow)
+{
     bool isRunning = true;
     while (isRunning)
     {
@@ -97,10 +74,40 @@ int AppWindow::start()
             SDL_GL_SwapWindow(m_pSdlWindow);
         }
     }
+}
 
-    // clean up
-    SDL_DestroyWindow(m_pSdlWindow);
-    SDL_Quit();
+int AppWindow::start()
+{
+    SDL_Window *m_pSdlWindow = nullptr;
+    int m_width = 1280;
+    int m_height = 720;
+    unsigned int m_flags = SDL_WINDOW_OPENGL;
 
+    enum class SCREENSIZE
+    {
+        is640x480,
+        is1366x768,
+        fullscreen
+    } m_currScreenSize = SCREENSIZE::is640x480,
+      m_lastNonFullScreenSize = SCREENSIZE::is640x480;
+
+    m_pSdlWindow = SDL_CreateWindow(
+        "Drawing App",           // window title
+        SDL_WINDOWPOS_UNDEFINED, // initial x position
+        SDL_WINDOWPOS_UNDEFINED, // initial y position
+        m_width,                 // width, in pixels
+        m_height,                // height, in pixels
+        m_flags                  // flags - see below
+    );
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_GLContext Context = SDL_GL_CreateContext(m_pSdlWindow);
+
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f); // white background
+    glViewport(0, 0, m_width, m_height);
+
+    listen(m_pSdlWindow);
+    clean(m_pSdlWindow);
     return 0;
 }
