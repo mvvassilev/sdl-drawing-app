@@ -2,6 +2,7 @@
 #define APP_WINDOW_H
 
 #include "../lib/draw.h"
+#include "../lib/colors.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <stdio.h>

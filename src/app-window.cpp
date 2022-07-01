@@ -56,7 +56,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
             SDL_SetRenderDrawColor(m_pRenderer, m_color.r, m_color.g, m_color.b, m_color.a); // black
             SDL_RenderClear(m_pRenderer);
 
-            SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 255); // black
+            SDL_SetRenderDrawColor(m_pRenderer, COLOR_BLACK.r, COLOR_BLACK.g, COLOR_BLACK.b, COLOR_BLACK.a); // black
 
             for (auto &point : m_points)
                 SDL_RenderDrawPoint(m_pRenderer, point.x, point.y);
@@ -73,8 +73,7 @@ SDL_Window *AppWindow::create()
     m_width = 1024;
     m_height = 576;
     m_flags = SDL_WINDOW_OPENGL;
-    m_rect = {0, 0, 100, 100};
-    m_color = {255, 255, 255, 255};
+    m_color = COLOR_WHITE;
 
     enum class SCREENSIZE
     {
@@ -83,12 +82,12 @@ SDL_Window *AppWindow::create()
     } m_screenSize = SCREENSIZE::is1024x576;
 
     m_pSdlWindow = SDL_CreateWindow(
-        "Drawing App",           // window title
+        "Drawing App",          // window title
         SDL_WINDOWPOS_CENTERED, // initial x position
         SDL_WINDOWPOS_CENTERED, // initial y position
-        m_width,                 // width, in pixels
-        m_height,                // height, in pixels
-        m_flags                  // flags - see below
+        m_width,                // width, in pixels
+        m_height,               // height, in pixels
+        m_flags                 // flags - see below
     );
 
     m_pRenderer = SDL_CreateRenderer(m_pSdlWindow, -1, SDL_RENDERER_ACCELERATED);
