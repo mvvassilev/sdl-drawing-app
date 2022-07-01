@@ -12,7 +12,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
     m_clicked = false;
     while (m_isRunning)
     {
-        // 1. check events
+        // events
         while (SDL_PollEvent(&m_sdlEvent) != 0)
         {
             if (m_sdlEvent.type == SDL_QUIT)
@@ -41,28 +41,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
                     break;
                 }
             }
-            else if (m_sdlEvent.type == SDL_MOUSEBUTTONDOWN)
-            {
-                if (m_sdlEvent.button.button == SDL_BUTTON_LEFT)
-                    m_clicked = true;
-            }
-            else if (m_sdlEvent.type == SDL_MOUSEMOTION && m_clicked)
-            {
-                int x, y;
-                SDL_GetMouseState(&x, &y);
-                m_points.push_back({x, y});
-            }
-            // render
-            SDL_SetRenderDrawColor(m_pRenderer, m_color.r, m_color.g, m_color.b, m_color.a); // black
-            SDL_RenderClear(m_pRenderer);
-
-            SDL_SetRenderDrawColor(m_pRenderer, COLOR_BLACK.r, COLOR_BLACK.g, COLOR_BLACK.b, COLOR_BLACK.a); // black
-
-            for (auto &point : m_points)
-                SDL_RenderDrawPoint(m_pRenderer, point.x, point.y);
-
-            // swap to new updated screen to render
-            SDL_RenderPresent(m_pRenderer);
+            draw_squigle(m_pRenderer, &m_sdlEvent, &m_clicked, &m_points);
         }
     }
 }
