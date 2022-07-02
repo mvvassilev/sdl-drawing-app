@@ -41,7 +41,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
                     break;
                 }
             }
-            draw_squigle(m_pRenderer, &m_sdlEvent, &m_clicked, &m_points);
+            m_points = draw_squigle(m_pRenderer, &m_sdlEvent, &m_clicked, m_points, m_brushSize);
         }
     }
 }
@@ -71,6 +71,11 @@ SDL_Window *AppWindow::create()
 
     m_pRenderer = SDL_CreateRenderer(m_pSdlWindow, -1, SDL_RENDERER_ACCELERATED);
     return m_pSdlWindow;
+}
+
+void AppWindow::set_brush_size(int size)
+{
+    m_brushSize = size;
 }
 
 int AppWindow::start()

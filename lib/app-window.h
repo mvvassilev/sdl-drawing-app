@@ -13,7 +13,7 @@ private:
     SDL_Window *m_pSdlWindow;
     SDL_Event m_sdlEvent;
     SDL_Renderer *m_pRenderer;
-    std::vector<SDL_Point> m_points;
+    std::vector<std::vector<SDL_Point>> m_points;
     std::vector<SDL_Rect> m_rects;
     SDL_Rect m_rect;
     SDL_Color m_color;
@@ -22,6 +22,7 @@ private:
     bool m_clicked;
     int m_width;
     int m_height;
+    int m_brushSize = 1;
 
     enum class SCREENSIZE
     {
@@ -32,6 +33,7 @@ private:
 public:
     int start();
     SDL_Window *create();
+    void set_brush_size(int);
     void listen(SDL_Window *);
     void clean(SDL_Window *);
 };

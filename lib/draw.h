@@ -7,8 +7,9 @@
 #include <stdio.h>
 #include <vector>
 
-void draw_squigle(SDL_Renderer *, SDL_Event *, bool *, std::vector<SDL_Point> *);
-void draw_rectangle(SDL_Event, SDL_Renderer *);
-void draw_circle(SDL_Event, SDL_Renderer *);
+std::vector<std::vector<SDL_Point>> draw_squigle(
+    SDL_Renderer *, SDL_Event *, bool *, std::vector<std::vector<SDL_Point>>, int);
+void draw_circle(SDL_Renderer *, int x, int y, int brushSize);
+void draw_line(SDL_Renderer *, int, int, int, int, int);
 
 #endif // DRAW_H
