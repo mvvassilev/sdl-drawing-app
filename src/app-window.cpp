@@ -42,6 +42,35 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
                 }
             }
             m_points = draw_squigle(m_pRenderer, &m_sdlEvent, &m_clicked, m_points, m_brushSize);
+            display_color_palette();
+
+            SDL_RenderPresent(m_pRenderer);
+        }
+    }
+}
+
+void AppWindow::display_color_palette()
+{
+    Uint8 startX = 10;
+    Uint8 startY = 10;
+    Uint8 len = 150;
+    Uint8 size = 5;
+    Uint8 border = 3;
+
+    // Border
+    SDL_SetRenderDrawColor(m_pRenderer, 10, 10, 10, 0); // black
+    SDL_Rect r = {startX - border, startY - border, startX + len + border - 1, len + border * 2};
+    SDL_RenderFillRect(m_pRenderer, &r);
+
+    // Palette
+    for (Uint8 row = startY; row < startY + len; row += size)
+    {
+        for (Uint8 col = startX; col <= startX + len; col += size)
+        {
+            SDL_Rect r = {col, row, size, size};
+            Uint8 blue = Uint8((col + row) / 2);
+            SDL_SetRenderDrawColor(m_pRenderer, col - startX, row - startY, blue, 0);
+            SDL_RenderFillRect(m_pRenderer, &r);
         }
     }
 }
@@ -76,6 +105,11 @@ SDL_Window *AppWindow::create()
 void AppWindow::set_brush_size(int size)
 {
     m_brushSize = size;
+}
+
+void AppWindow::set_color(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
+{
+    m_color = {red, green, blue, alpha};
 }
 
 int AppWindow::start()

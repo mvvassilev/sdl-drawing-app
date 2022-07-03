@@ -34,7 +34,9 @@ public:
     int start();
     SDL_Window *create();
     void set_brush_size(int);
+    void set_color(Uint8, Uint8, Uint8, Uint8);
     void listen(SDL_Window *);
     void clean(SDL_Window *);
+    void display_color_palette();
 };
 #endif // APP_WINDOW_H

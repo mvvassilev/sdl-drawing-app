@@ -41,8 +41,6 @@ std::vector<std::vector<SDL_Point>> draw_squigle(SDL_Renderer *pRenderer,
             draw_circle(pRenderer, vector[i].x, vector[i].y, brushSize);
         }
     }
-
-    SDL_RenderPresent(pRenderer);
     return points;
 }
 
