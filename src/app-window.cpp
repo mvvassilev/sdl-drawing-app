@@ -2,6 +2,7 @@
 
 void AppWindow::clean(SDL_Window *m_pSdlWindow)
 {
+    SDL_DestroyRenderer(m_pRenderer);
     SDL_DestroyWindow(m_pSdlWindow);
     SDL_Quit();
 }
@@ -41,11 +42,53 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
                     break;
                 }
             }
-            m_points = draw_squigle(m_pRenderer, &m_sdlEvent, &m_clicked, m_points, m_brushSize);
+            change_tool();
+            switch (m_tool) // check current tool
+            {
+            case TOOL::usingPencil:
+                m_points = draw_squigle(
+                    m_pRenderer, &m_sdlEvent, &m_clicked,
+                    m_points, m_brushSize, m_color);
+                break;
+            case TOOL::usingEraser:
+                set_color(COLOR_WHITE.r, COLOR_WHITE.g, COLOR_WHITE.b, COLOR_WHITE.a);
+                m_points = draw_squigle(
+                    m_pRenderer, &m_sdlEvent, &m_clicked,
+                    m_points, m_brushSize, m_color);
+                break;
+            default:
+                break;
+            }
+
+            change_color();
             display_color_palette();
             display_icons();
-
+            display_tools_border();
             SDL_RenderPresent(m_pRenderer);
+        }
+    }
+}
+
+void AppWindow::change_color()
+{
+    Uint8 startX = 10;
+    Uint8 startY = 10;
+    if (m_sdlEvent.type == SDL_MOUSEBUTTONDOWN)
+    {
+        if (m_sdlEvent.button.button == SDL_BUTTON_LEFT)
+        {
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            if (10 <= x && x <= 170)
+            {
+                if (10 <= y && y <= 170)
+                {
+                    Uint8 red = x - startX;
+                    Uint8 green = y - startY;
+                    Uint8 blue = (red + green) / 2;
+                    set_color(Uint8(red), Uint8(green), Uint8(blue), 0);
+                }
+            }
         }
     }
 }
@@ -60,7 +103,10 @@ void AppWindow::display_color_palette()
 
     // Border
     SDL_SetRenderDrawColor(m_pRenderer, 10, 10, 10, 0); // black
-    SDL_Rect r = {startX - border, startY - border, startX + len + border - 1, len + border * 2};
+    SDL_Rect r = {startX - border,
+                  startY - border,
+                  startX + len + border - 1,
+                  len + border * 2};
     SDL_RenderFillRect(m_pRenderer, &r);
 
     // Palette
@@ -76,6 +122,16 @@ void AppWindow::display_color_palette()
     }
 }
 
+void AppWindow::display_tools_border()
+{
+    SDL_Rect x = {0, 253, 180, 2};
+    SDL_Rect y = {178, 0, 2, 255};
+
+    SDL_SetRenderDrawColor(m_pRenderer, 10, 10, 10, 0); // black
+    SDL_RenderFillRect(m_pRenderer, &x);
+    SDL_RenderFillRect(m_pRenderer, &y);
+}
+
 SDL_Window *AppWindow::create()
 {
     m_pSdlWindow = nullptr;
@@ -83,12 +139,8 @@ SDL_Window *AppWindow::create()
     m_height = 576;
     m_flags = SDL_WINDOW_OPENGL;
     m_color = COLOR_WHITE;
-
-    enum class SCREENSIZE
-    {
-        is1024x576,
-        fullscreen
-    } m_screenSize = SCREENSIZE::is1024x576;
+    m_screenSize = SCREENSIZE::is1024x576;
+    m_tool = TOOL::usingPencil;
 
     m_pSdlWindow = SDL_CreateWindow(
         "Drawing App",          // window title
@@ -100,6 +152,7 @@ SDL_Window *AppWindow::create()
     );
 
     m_pRenderer = SDL_CreateRenderer(m_pSdlWindow, -1, SDL_RENDERER_ACCELERATED);
+    set_color(COLOR_BLACK.r, COLOR_BLACK.g, COLOR_BLACK.b, COLOR_BLACK.a);
     return m_pSdlWindow;
 }
 
@@ -132,6 +185,42 @@ void AppWindow::display_icons()
 
     SDL_RenderCopy(m_pRenderer, pPencilIcon, NULL, &pencil);
     SDL_RenderCopy(m_pRenderer, pEraserIcon, NULL, &eraser);
+}
+
+void AppWindow::change_tool()
+{
+    if (m_sdlEvent.type == SDL_MOUSEBUTTONDOWN)
+    {
+        if (m_sdlEvent.button.button == SDL_BUTTON_LEFT)
+        {
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            set_tool_pencil(x, y);
+            set_tool_eraser(x, y);
+        }
+    }
+}
+
+void AppWindow::set_tool_pencil(int x, int y)
+{
+    if (18 <= x && x <= 78)
+    {
+        if (175 <= y && y <= 235)
+        {
+            m_tool = TOOL::usingPencil;
+        }
+    }
+}
+
+void AppWindow::set_tool_eraser(int x, int y)
+{
+    if (100 <= x && x <= 160)
+    {
+        if (175 <= y && y <= 235)
+        {
+            m_tool = TOOL::usingEraser;
+        }
+    }
 }
 
 void AppWindow::set_brush_size(int size)
