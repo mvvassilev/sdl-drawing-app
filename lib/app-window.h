@@ -5,6 +5,7 @@
 #include "../lib/colors.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 
 class AppWindow
@@ -33,6 +34,7 @@ private:
 public:
     int start();
     SDL_Window *create();
+    void display_icons();
     void set_brush_size(int);
     void set_color(Uint8, Uint8, Uint8, Uint8);
     void listen(SDL_Window *);

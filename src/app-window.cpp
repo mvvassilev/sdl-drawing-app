@@ -43,6 +43,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
             }
             m_points = draw_squigle(m_pRenderer, &m_sdlEvent, &m_clicked, m_points, m_brushSize);
             display_color_palette();
+            display_icons();
 
             SDL_RenderPresent(m_pRenderer);
         }
@@ -100,6 +101,37 @@ SDL_Window *AppWindow::create()
 
     m_pRenderer = SDL_CreateRenderer(m_pSdlWindow, -1, SDL_RENDERER_ACCELERATED);
     return m_pSdlWindow;
+}
+
+void AppWindow::display_icons()
+{
+    int width;
+    int height;
+    SDL_Texture *pPencilIcon = IMG_LoadTexture(
+        m_pRenderer, "../icons/pencil.png");
+    SDL_Texture *pEraserIcon = IMG_LoadTexture(
+        m_pRenderer, "../icons/eraser.png");
+
+    SDL_QueryTexture(pPencilIcon, NULL, NULL, &width, &height);
+    SDL_QueryTexture(pEraserIcon, NULL, NULL, &width, &height);
+
+    SDL_Rect pencil;
+    pencil.x = 18;
+    pencil.y = 175;
+    pencil.w = width;
+    pencil.h = height;
+
+    SDL_Rect eraser;
+    eraser.x = 100;
+    eraser.y = 175;
+    eraser.w = width;
+    eraser.h = height;
+
+    SDL_RenderDrawRect(m_pRenderer, &pencil);
+    SDL_RenderDrawRect(m_pRenderer, &eraser);
+
+    SDL_RenderCopy(m_pRenderer, pPencilIcon, NULL, &pencil);
+    SDL_RenderCopy(m_pRenderer, pEraserIcon, NULL, &eraser);
 }
 
 void AppWindow::set_brush_size(int size)
