@@ -59,7 +59,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
             default:
                 break;
             }
-
+            save_to_file();
             change_color();
             display_color_palette();
             display_icons();
@@ -67,6 +67,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
             SDL_RenderPresent(m_pRenderer);
         }
     }
+    save_to_file();
 }
 
 void AppWindow::change_color()
@@ -152,6 +153,8 @@ SDL_Window *AppWindow::create()
     );
 
     m_pRenderer = SDL_CreateRenderer(m_pSdlWindow, -1, SDL_RENDERER_ACCELERATED);
+    m_pSurface = SDL_GetWindowSurface(m_pSdlWindow);
+    m_pTexture = SDL_CreateTexture(m_pRenderer, 8, SDL_TEXTUREACCESS_TARGET, m_width, m_height);
     set_color(COLOR_BLACK.r, COLOR_BLACK.g, COLOR_BLACK.b, COLOR_BLACK.a);
     return m_pSdlWindow;
 }
@@ -164,9 +167,12 @@ void AppWindow::display_icons()
         m_pRenderer, "../icons/pencil.png");
     SDL_Texture *pEraserIcon = IMG_LoadTexture(
         m_pRenderer, "../icons/eraser.png");
+    SDL_Texture *pSaveIcon = IMG_LoadTexture(
+        m_pRenderer, "../icons/save.png");
 
     SDL_QueryTexture(pPencilIcon, NULL, NULL, &width, &height);
     SDL_QueryTexture(pEraserIcon, NULL, NULL, &width, &height);
+    SDL_QueryTexture(pSaveIcon, NULL, NULL, &width, &height);
 
     SDL_Rect pencil;
     pencil.x = 18;
@@ -180,11 +186,19 @@ void AppWindow::display_icons()
     eraser.w = width;
     eraser.h = height;
 
+    SDL_Rect save;
+    save.x = 50;
+    save.y = m_height - 100;
+    save.w = width;
+    save.h = height;
+
     SDL_RenderDrawRect(m_pRenderer, &pencil);
     SDL_RenderDrawRect(m_pRenderer, &eraser);
+    SDL_RenderDrawRect(m_pRenderer, &save);
 
     SDL_RenderCopy(m_pRenderer, pPencilIcon, NULL, &pencil);
     SDL_RenderCopy(m_pRenderer, pEraserIcon, NULL, &eraser);
+    SDL_RenderCopy(m_pRenderer, pSaveIcon, NULL, &save);
 }
 
 void AppWindow::change_tool()
@@ -231,6 +245,29 @@ void AppWindow::set_brush_size(int size)
 void AppWindow::set_color(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 {
     m_color = {red, green, blue, alpha};
+}
+
+void AppWindow::save_to_file()
+{
+    if (m_sdlEvent.type == SDL_MOUSEBUTTONDOWN)
+    {
+        if (m_sdlEvent.button.button == SDL_BUTTON_LEFT)
+        {
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            if (50 <= x && x <= 110 && m_height - 100 <= y && y <= m_height - 50)
+            {
+                SDL_Texture *target = SDL_GetRenderTarget(m_pRenderer);
+                SDL_SetRenderTarget(m_pRenderer, m_pTexture);
+                SDL_RenderReadPixels(m_pRenderer, NULL, m_pSurface->format->format, m_pSurface->pixels, m_pSurface->pitch);
+
+                char filename[256] = "../out/image.png";
+                IMG_SavePNG(m_pSurface, filename);
+                SDL_FreeSurface(m_pSurface);
+                SDL_SetRenderTarget(m_pRenderer, target);
+            }
+        }
+    }
 }
 
 int AppWindow::start()

@@ -12,8 +12,10 @@ class AppWindow
 {
 private:
     SDL_Window *m_pSdlWindow;
-    SDL_Event m_sdlEvent;
     SDL_Renderer *m_pRenderer;
+    SDL_Texture *m_pTexture;
+    SDL_Surface *m_pSurface;
+    SDL_Event m_sdlEvent;
     std::vector<std::vector<SDL_Point>> m_points;
     std::vector<SDL_Rect> m_rects;
     SDL_Rect m_rect;
@@ -51,5 +53,6 @@ public:
     void clean(SDL_Window *);
     void display_color_palette();
     void display_tools_border();
+    void save_to_file();
 };
 #endif // APP_WINDOW_H
