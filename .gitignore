@@ -37,3 +37,4 @@ CMakeLists.txt
 
 # vscode config
 .vscode/*
+out/image.png
