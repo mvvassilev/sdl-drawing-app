@@ -42,7 +42,6 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
                     break;
                 }
             }
-            change_tool();
             switch (m_tool) // check current tool
             {
             case TOOL::usingPencil:
@@ -60,6 +59,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
                 break;
             }
             save_to_file();
+            change_tool();
             change_color();
             display_color_palette();
             display_icons();
@@ -209,30 +209,86 @@ void AppWindow::change_tool()
         {
             int x, y;
             SDL_GetMouseState(&x, &y);
-            set_tool_pencil(x, y);
-            set_tool_eraser(x, y);
+            set_tool_pencil(x, y, 1);
+            set_tool_eraser(x, y, 1);
+        }
+    }
+    else if (m_sdlEvent.type == SDL_MOUSEBUTTONUP)
+    {
+        if (m_sdlEvent.button.button == SDL_BUTTON_LEFT)
+        {
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            set_tool_pencil(x, y, 0);
+            set_tool_eraser(x, y, 0);
         }
     }
 }
 
-void AppWindow::set_tool_pencil(int x, int y)
+void AppWindow::set_tool_pencil(int x, int y, int isPressed)
 {
     if (18 <= x && x <= 78)
     {
         if (175 <= y && y <= 235)
         {
             m_tool = TOOL::usingPencil;
+            SDL_Rect pencil_shadow = {18, 175, 60, 60};
+            switch (isPressed)
+            {
+            case 0:
+                SDL_SetRenderDrawColor(
+                    m_pRenderer,
+                    COLOR_WHITE.r,
+                    COLOR_WHITE.g,
+                    COLOR_WHITE.b,
+                    COLOR_WHITE.a);
+                break;
+            case 1:
+                SDL_SetRenderDrawColor(
+                    m_pRenderer,
+                    COLOR_GREY.r,
+                    COLOR_GREY.g,
+                    COLOR_GREY.b,
+                    COLOR_GREY.a);
+                break;
+            default:
+                break;
+            }
+            SDL_RenderFillRect(m_pRenderer, &pencil_shadow);
         }
     }
 }
 
-void AppWindow::set_tool_eraser(int x, int y)
+void AppWindow::set_tool_eraser(int x, int y, int isPressed)
 {
     if (100 <= x && x <= 160)
     {
         if (175 <= y && y <= 235)
         {
             m_tool = TOOL::usingEraser;
+            SDL_Rect eraser_shadow = {100, 175, 60, 60};
+            switch (isPressed)
+            {
+            case 0:
+                SDL_SetRenderDrawColor(
+                    m_pRenderer,
+                    COLOR_WHITE.r,
+                    COLOR_WHITE.g,
+                    COLOR_WHITE.b,
+                    COLOR_WHITE.a);
+                break;
+            case 1:
+                SDL_SetRenderDrawColor(
+                    m_pRenderer,
+                    COLOR_GREY.r,
+                    COLOR_GREY.g,
+                    COLOR_GREY.b,
+                    COLOR_GREY.a);
+                break;
+            default:
+                break;
+            }
+            SDL_RenderFillRect(m_pRenderer, &eraser_shadow);
         }
     }
 }
@@ -265,7 +321,31 @@ void AppWindow::save_to_file()
                 IMG_SavePNG(m_pSurface, filename);
                 SDL_FreeSurface(m_pSurface);
                 SDL_SetRenderTarget(m_pRenderer, target);
+                SDL_Rect save_shadow = {50, m_height - 100, 60, 60};
+                SDL_SetRenderDrawColor(
+                    m_pRenderer,
+                    COLOR_GREY.r,
+                    COLOR_GREY.g,
+                    COLOR_GREY.b,
+                    COLOR_GREY.a);
+                SDL_RenderFillRect(m_pRenderer, &save_shadow);
             }
+        }
+    }
+    if (m_sdlEvent.type == SDL_MOUSEBUTTONUP)
+    {
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+        if (50 <= x && x <= 110 && m_height - 100 <= y && y <= m_height - 50)
+        {
+            SDL_Rect save_shadow = {50, m_height - 100, 60, 60};
+            SDL_SetRenderDrawColor(
+                m_pRenderer,
+                COLOR_WHITE.r,
+                COLOR_WHITE.g,
+                COLOR_WHITE.b,
+                COLOR_WHITE.a);
+            SDL_RenderFillRect(m_pRenderer, &save_shadow);
         }
     }
 }

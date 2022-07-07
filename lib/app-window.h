@@ -45,8 +45,8 @@ public:
     void display_icons();
     void change_tool();
     void change_color();
-    void set_tool_pencil(int, int);
-    void set_tool_eraser(int, int);
+    void set_tool_pencil(int, int, int);
+    void set_tool_eraser(int, int, int);
     void set_brush_size(int);
     void set_color(Uint8, Uint8, Uint8, Uint8);
     void listen(SDL_Window *);
