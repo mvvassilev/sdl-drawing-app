@@ -81,3 +81,6 @@
 1	1083	1657281096290432595	CMakeFiles/sdl-drawing-app.dir/src/main.cpp.o	cea482ae221bb694
 2	1208	1657281096414432481	CMakeFiles/sdl-drawing-app.dir/src/app-window.cpp.o	7d996f13337db05e
 1208	1395	1657281096598432310	sdl-drawing-app	4f7d43b3c6745d87
+1	1454	1657283318376405717	CMakeFiles/sdl-drawing-app.dir/src/main.cpp.o	cea482ae221bb694
+2	1582	1657283318504406556	CMakeFiles/sdl-drawing-app.dir/src/app-window.cpp.o	7d996f13337db05e
+1582	1774	1657283318696407814	sdl-drawing-app	4f7d43b3c6745d87
