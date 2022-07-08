@@ -317,6 +317,8 @@ void AppWindow::save_to_file()
                 SDL_RenderReadPixels(m_pRenderer, NULL, m_pSurface->format->format, m_pSurface->pixels, m_pSurface->pitch);
 
                 char filename[256] = "../out/image.png";
+                time_t now = time(0);
+                strftime(filename, sizeof(filename), OUTPUT_FILE_FORMAT, localtime(&now));
                 IMG_SavePNG(m_pSurface, filename);
                 SDL_FreeSurface(m_pSurface);
                 SDL_SetRenderTarget(m_pRenderer, target);

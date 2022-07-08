@@ -7,6 +7,9 @@
 #include <SDL2/SDL_opengl.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
+#include <time.h>
+
+#define OUTPUT_FILE_FORMAT "../out/%Y%m%d_%H%M%S"
 
 class AppWindow
 {
