@@ -3,6 +3,12 @@
 
 #include <SDL2/SDL.h>
 
+struct ColorPoint
+{
+    SDL_Rect rect;
+    SDL_Color color;
+};
+
 const SDL_Color COLOR_BLACK = {0, 0, 0, 255};
 const SDL_Color COLOR_WHITE = {255, 255, 255, 255};
 const SDL_Color COLOR_RED = {255, 0, 0, 255};

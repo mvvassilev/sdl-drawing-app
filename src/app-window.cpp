@@ -50,7 +50,7 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
                     m_points, m_brushSize, m_color);
                 break;
             case TOOL::usingEraser:
-                set_color(COLOR_WHITE.r, COLOR_WHITE.g, COLOR_WHITE.b, COLOR_WHITE.a);
+                set_color(COLOR_WHITE);
                 m_points = draw_squigle(
                     m_pRenderer, &m_sdlEvent, &m_clicked,
                     m_points, m_brushSize, m_color);
@@ -67,7 +67,6 @@ void AppWindow::listen(SDL_Window *m_pSdlWindow)
             SDL_RenderPresent(m_pRenderer);
         }
     }
-    save_to_file();
 }
 
 void AppWindow::change_color()
@@ -87,7 +86,7 @@ void AppWindow::change_color()
                     Uint8 red = x - startX;
                     Uint8 green = y - startY;
                     Uint8 blue = (red + green) / 2;
-                    set_color(Uint8(red), Uint8(green), Uint8(blue), 0);
+                    set_color({Uint8(red), Uint8(green), Uint8(blue), 0});
                 }
             }
         }
@@ -139,7 +138,7 @@ SDL_Window *AppWindow::create()
     m_width = 1024;
     m_height = 576;
     m_flags = SDL_WINDOW_OPENGL;
-    m_color = COLOR_WHITE;
+    set_color(COLOR_WHITE);
     m_screenSize = SCREENSIZE::is1024x576;
     m_tool = TOOL::usingPencil;
 
@@ -155,7 +154,7 @@ SDL_Window *AppWindow::create()
     m_pRenderer = SDL_CreateRenderer(m_pSdlWindow, -1, SDL_RENDERER_ACCELERATED);
     m_pSurface = SDL_GetWindowSurface(m_pSdlWindow);
     m_pTexture = SDL_CreateTexture(m_pRenderer, 8, SDL_TEXTUREACCESS_TARGET, m_width, m_height);
-    set_color(COLOR_BLACK.r, COLOR_BLACK.g, COLOR_BLACK.b, COLOR_BLACK.a);
+    set_color(COLOR_BLACK);
     return m_pSdlWindow;
 }
 
@@ -298,9 +297,9 @@ void AppWindow::set_brush_size(int size)
     m_brushSize = size;
 }
 
-void AppWindow::set_color(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
+void AppWindow::set_color(SDL_Color color)
 {
-    m_color = {red, green, blue, alpha};
+    m_color = color;
 }
 
 void AppWindow::save_to_file()

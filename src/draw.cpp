@@ -1,17 +1,15 @@
 #include "../lib/draw.h"
 
-std::vector<std::vector<SDL_Point>> draw_squigle(SDL_Renderer *pRenderer,
-                                                 SDL_Event *pSdlEvent, bool *pClicked,
-                                                 std::vector<std::vector<SDL_Point>> points,
-                                                 int brushSize,
-                                                 SDL_Color color)
+std::vector<std::vector<ColorPoint>> draw_squigle(
+    SDL_Renderer *pRenderer, SDL_Event *pSdlEvent, bool *pClicked,
+    std::vector<std::vector<ColorPoint>> points, int brushSize, SDL_Color color)
 {
     if (pSdlEvent->type == SDL_MOUSEBUTTONDOWN)
     {
         if (pSdlEvent->button.button == SDL_BUTTON_LEFT)
         {
             *pClicked = true;
-            points.push_back(std::vector<SDL_Point>());
+            points.push_back(std::vector<ColorPoint>());
         }
     }
     else if (pSdlEvent->type == SDL_MOUSEBUTTONUP)
@@ -26,7 +24,11 @@ std::vector<std::vector<SDL_Point>> draw_squigle(SDL_Renderer *pRenderer,
         int x, y;
         SDL_GetMouseState(&x, &y);
         if (x > 180 || y > 255) // check if inside tools border
-            points[points.size() - 1].push_back({x, y});
+        {
+            SDL_Rect r = {x, y, 1, 1};
+            SDL_Color c = color;
+            points[points.size() - 1].push_back({r, c});
+        }
     }
 
     SDL_SetRenderDrawColor(pRenderer, COLOR_WHITE.r, COLOR_WHITE.g, COLOR_WHITE.b, COLOR_WHITE.a);
@@ -36,9 +38,9 @@ std::vector<std::vector<SDL_Point>> draw_squigle(SDL_Renderer *pRenderer,
     {
         for (int i = 0, j = 1; j < vector.size(); i++, j++)
         {
-            draw_line(pRenderer, vector[i].x, vector[i].y,
-                      vector[j].x, vector[j].y, brushSize, color);
-            draw_circle(pRenderer, vector[i].x, vector[i].y, brushSize, color);
+            draw_line(pRenderer, vector[i].rect.x, vector[i].rect.y,
+                      vector[j].rect.x, vector[j].rect.y, brushSize, vector[i].color);
+            draw_circle(pRenderer, vector[i].rect.x, vector[i].rect.y, brushSize, vector[i].color);
         }
     }
     return points;
@@ -55,7 +57,10 @@ void draw_circle(SDL_Renderer *pRenderer, int x, int y, int brushSize, SDL_Color
             if ((dx * dx + dy * dy) <= (brushSize * brushSize))
             {
                 SDL_SetRenderDrawColor(pRenderer, color.r, color.g, color.b, color.a);
-                SDL_RenderDrawPoint(pRenderer, x + dx, y + dy);
+                // SDL_RenderDrawPoint(pRenderer, x + dx, y + dy);
+                SDL_Rect r = {x + dx, y + dy, 1, 1};
+                SDL_RenderFillRect(pRenderer, &r);
+                SDL_SetRenderDrawColor(pRenderer, COLOR_WHITE.r, COLOR_WHITE.g, COLOR_WHITE.b, COLOR_WHITE.a);
             }
         }
     }
