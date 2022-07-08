@@ -1,0 +1,19 @@
+[
+{
+  "directory": "/home/user/Documents/Freelancer/sdl-drawing-app/build",
+  "command": "/usr/bin/g++    -g   -o CMakeFiles/sdl-drawing-app.dir/src/main.cpp.o -c /home/user/Documents/Freelancer/sdl-drawing-app/src/main.cpp",
+  "file": "/home/user/Documents/Freelancer/sdl-drawing-app/src/main.cpp"
+},
+
+{
+  "directory": "/home/user/Documents/Freelancer/sdl-drawing-app/build",
+  "command": "/usr/bin/g++    -g   -o CMakeFiles/sdl-drawing-app.dir/src/app-window.cpp.o -c /home/user/Documents/Freelancer/sdl-drawing-app/src/app-window.cpp",
+  "file": "/home/user/Documents/Freelancer/sdl-drawing-app/src/app-window.cpp"
+},
+
+{
+  "directory": "/home/user/Documents/Freelancer/sdl-drawing-app/build",
+  "command": "/usr/bin/g++    -g   -o CMakeFiles/sdl-drawing-app.dir/src/draw.cpp.o -c /home/user/Documents/Freelancer/sdl-drawing-app/src/draw.cpp",
+  "file": "/home/user/Documents/Freelancer/sdl-drawing-app/src/draw.cpp"
+}
+]

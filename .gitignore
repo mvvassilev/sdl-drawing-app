@@ -31,10 +31,6 @@
 *.out
 *.app
 
-# Build rules
-build/*
-CMakeLists.txt
-
 # vscode config
 .vscode/*
 out/image.png

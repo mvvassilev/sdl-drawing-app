@@ -1,0 +1,5 @@
+/home/user/Documents/Freelancer/sdl-drawing-app/build/CMakeFiles/edit_cache.dir
+/home/user/Documents/Freelancer/sdl-drawing-app/build/CMakeFiles/package_source.dir
+/home/user/Documents/Freelancer/sdl-drawing-app/build/CMakeFiles/rebuild_cache.dir
+/home/user/Documents/Freelancer/sdl-drawing-app/build/CMakeFiles/package.dir
+/home/user/Documents/Freelancer/sdl-drawing-app/build/CMakeFiles/sdl-drawing-app.dir
